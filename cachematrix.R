@@ -1,6 +1,6 @@
-## The two functions interact with each other. The first one resets 
-## the cache and creates a list of functions for the second one to
-## use.
+## The two functions work together. The first one resets 
+## the cache and creates a list of functions to be called by the
+## second function, or by the user as needed.
 
 
 ## makeCacheMatrix() takes a matrix and first, since it's a new 
@@ -20,7 +20,7 @@ makeCacheMatrix <- function(x = matrix()) {
         }
         get <- function() x 
         setsolve <- function(solve) s <<- solve   
-        getsolve <- function() m
+        getsolve <- function() s
         list(set = set, get = get,
              setsolve = setsolve,
              getsolve = getsolve)
