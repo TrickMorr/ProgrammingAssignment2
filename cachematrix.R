@@ -1,34 +1,51 @@
-## The two functions work together. The first one resets or creates
-## the cache and creates a list of functions to be called by the
-## second function, or by the user as needed.
-
-
-## makeCacheMatrix() takes or creates a matrix and initially  
-## sets the cached inverse to NULL.
-## It creates a list of functions that can be assigned to a 
-## variable and then are either called by the user or called from within a 
-## call of cacheSolve. 
-## Functions are:
-## set(), to set the matrix value if it is changed,   
-## getsolve(), to retrieve the value of s, which is either the cached inverse or NULL  
-## get(), to retrieve the new matrix values to calculate the new inverse
-## setsolve(), to cache the inverse calculated in cacheSolve()
+## As required in Assignment 2 of Coursera course, R Programming:
+##
+## These two functions are for caching the inverse of a matrix
+## in order to conserve computing power.
+##
+## The two functions work together. The first creates or resets
+## the cache and then creates a list of functions called by the
+## second, in order to calculate a value and store it in memory.
+## 
+##
+## ***Function 1:***
+##
+## makeCacheMatrix(x = matrix())
+## arguments: x, a square matrix (by default creates an empty one)
+## output: special list of functions
+## other output: environment for storage of cached values
+## 
+## Details:
+## Whenever called, it creates/resets a cached inverse with value NULL
+## 
+## It then assigns the input matrix to a local variable and creates
+## a list of four functions:
+##
+## set()        This function is different, and to be called separately
+##              from the other three, which are all called from 
+##              within cacheSolve().
+##              It takes a matrix as its argument, checks if it is a new 
+##              value, and if so, assigns it to the local variable 
+##              retrievable by the get() function.
+## 
+## Functions designed to be called from within cacheSolve:
+##
+## getsolve()   retrieves the value of s, the cached inverse(or NULL)
+## get()        retrieves the matrix assigned to the local variable
+## setsolve()   caches the newly calculated inverse
 
 
 makeCacheMatrix <- function(x = matrix()) {
-        s <- NULL   
-                                                ##set() to set new matrix,
-                                                ##sets as vector the matrix
-        set <- function(y) {                    ##of Ts & Fs from y==x.
-                test <- as.vector(y == x)       ##if sum of range is not 2, is
-                if(sum(range(as.numeric(test))) != 2) { 
-                x <<- y                         ##at least one FALSE, new/old
-                s <<- NULL                      ##matrices are not equal, so 
-                } else {                        ##reset matrix value & cache
+        s <- NULL
+        set <- function(y) {
+                if(!identical(x, y)) {
+                x <<- y
+                s <<- NULL
+                } else {
                         message("input matrix is equal to previous matrix")
                         message("inverse cache preserved")
-                }                               
-        }                                       
+                }
+        }
         get <- function() x 
         setsolve <- function(solve) s <<- solve   
         getsolve <- function() s
@@ -38,13 +55,24 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 
-
-## cacheSolve accesses the functions created by makeCacheMatrix,
-## to check for an existing cached value and return it.
-## If cached value is NULL, the function then calls the get
-## function to get the matrix, solves for the inverse, calls the 
-## setsolve function to set that inverse as the cached value, and
-## finally returns that same calculated inverse.
+## ***Function 2:***
+##
+## cacheSolve(x)
+## argument: x, the special list created by makeCacheMatrix()
+## output: inverse of the matrix passed to makeCacheMatrix() or set()
+## other output: calculated inverse cached for quick retrieval
+##
+## Details:
+## cacheSolve() first calls getsolve() and checks for a cached value.
+## If value is not NULL, it is returned, computational power is conserved.
+##
+## If cached value is NULL, cacheSolve() calls 
+## get() to get the matrix entered by either set(),
+## or the original call of makeCacheMatrix(). 
+##
+## cacheSolve() then solves for the inverse, calls
+## setsolve() to set that inverse as the cached value,
+## and finally returns same calculated inverse.
 
 cacheSolve <- function(x, ...) {
         s <- x$getsolve()
