@@ -1,7 +1,7 @@
 ## As required in Assignment 2 of Coursera course, R Programming:
 ##
 ## These two functions are for caching the inverse of a matrix
-## in order to conserve computing power.
+## in order to conserve CPU time in a repetitive application.
 ##
 ## The two functions work together. The first creates or resets
 ## the cache and then creates a list of functions called by the
@@ -37,17 +37,23 @@
 
 makeCacheMatrix <- function(x = matrix()) {
         s <- NULL
+        
+        ## set() is a bit different from the assignment example. This set is
+        ## hopefully more efficient by comparing the new matrix to the matrix
+        ## which was previously set. If they are identical, even if assigned to
+        ## a different variable, the function will recognize that the inverse 
+        ## will therefore also be identical, so the cached inverse is preserved.
         set <- function(y) {
                 if(!identical(x, y)) {
                 x <<- y
                 s <<- NULL
                 } else {
-                        message("input matrix is equal to previous matrix")
+                        message("input matrix is identical to previous matrix")
                         message("inverse cache preserved")
                 }
         }
         get <- function() x 
-        setsolve <- function(solve) s <<- solve   
+        setsolve <- function(inverse) s <<- inverse   
         getsolve <- function() s
         list(set = set, get = get,
              setsolve = setsolve,
