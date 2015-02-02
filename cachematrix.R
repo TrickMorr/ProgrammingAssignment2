@@ -49,7 +49,7 @@ makeCacheMatrix <- function(x = matrix()) {
                 s <<- NULL
                 } else {
                         message("input matrix is identical to previous matrix")
-                        message("inverse cache preserved")
+                        return("inverse cache preserved")
                 }
         }
         get <- function() x 
