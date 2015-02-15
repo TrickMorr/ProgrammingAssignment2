@@ -38,7 +38,7 @@
 makeCacheMatrix <- function(x = matrix()) {
         s <- NULL
         
-        ## set() is a bit different from the assignment example. This set is
+        ## this set() is a bit different from the assignment example. This set is
         ## hopefully more efficient by comparing the new matrix to the matrix
         ## which was previously set. If they are identical, even if assigned to
         ## a different variable, the function will recognize that the inverse 
@@ -70,7 +70,7 @@ makeCacheMatrix <- function(x = matrix()) {
 ##
 ## Details:
 ## cacheSolve() first calls getsolve() and checks for a cached value.
-## If value is not NULL, it is returned, computational power is conserved.
+## If value is not NULL, that value is returned, computational power is conserved.
 ##
 ## If cached value is NULL, cacheSolve() calls 
 ## get() to get the matrix entered by either set(),
